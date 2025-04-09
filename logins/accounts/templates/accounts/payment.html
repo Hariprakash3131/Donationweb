@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
+        }
+        .payment-container {
+            background-color: #fff;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            max-width: 600px;
+            margin: 2rem auto;
+        }
+        .payment-header {
+            text-align: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid #3bcf93;
+        }
+        .payment-header h2 {
+            color: #2c3e50;
+            margin-bottom: 0.5rem;
+        }
+        .payment-details {
+            background-color: #f8f9fa;
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin-bottom: 2rem;
+        }
+        .payment-details p {
+            margin: 0.5rem 0;
+            color: #2c3e50;
+        }
+        .amount-display {
+            font-size: 2rem;
+            color: #2c3e50;
+            text-align: center;
+            margin: 1.5rem 0;
+        }
+        .btn-pay {
+            background-color: #3bcf93;
+            color: white;
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 8px;
+            width: 100%;
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-top: 1rem;
+        }
+        .btn-pay:hover {
+            background-color: #32b780;
+            color: white;
+        }
+        .payment-methods {
+            margin: 1.5rem 0;
+            text-align: center;
+        }
+        .payment-methods img {
+            height: 30px;
+            margin: 0 10px;
+            opacity: 0.6;
+        }
+    </style>
+</head>
+<body>
+    <div class="payment-container">
+        <div class="payment-header">
+            <h2>Complete Your Donation</h2>
+            <p class="text-muted">Your generosity makes a difference</p>
+        </div>
+
+        <div class="payment-details">
+            <p><strong>Donor Name:</strong> {{ donation.first_name }} {{ donation.last_name }}</p>
+            <p><strong>Email:</strong> {{ donation.email }}</p>
+            <p><strong>Phone:</strong> {{ donation.phone_number }}</p>
+            <p><strong>PAN:</strong> {{ donation.pancard }}</p>
+        </div>
+
+        <div class="amount-display">
+            ₹{{ donation.amount }}
+        </div>
+
+        <div class="payment-methods">
+            <p class="text-muted mb-3">Accepted Payment Methods</p>
+            <img src="https://cdn-icons-png.flaticon.com/512/196/196578.png" alt="Visa">
+            <img src="https://cdn-icons-png.flaticon.com/512/196/196561.png" alt="Mastercard">
+            <img src="https://cdn-icons-png.flaticon.com/512/196/196565.png" alt="UPI">
+            <img src="https://cdn-icons-png.flaticon.com/512/196/196559.png" alt="Net Banking">
+        </div>
+
+        <button class="btn btn-pay" onclick="processPayment()">Pay Now</button>
+    </div>
+
+    <script>
+        function processPayment() {
+            const donationAmount = "{{ donation.amount|default:'0' }}";
+            const transactionId = 'TXN' + Math.random().toString(36).substr(2, 9).toUpperCase();
+            
+            // Simulate payment processing
+            setTimeout(function() {
+                alert("Processing payment...");
+                setTimeout(function() {
+                    alert("Payment successful!");
+                    window.location.href = "{% url 'payment_success' donation.id %}?amount=" + encodeURIComponent(donationAmount) + "&transaction_id=" + encodeURIComponent(transactionId);
+                }, 1000);
+            }, 500);
+        }
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

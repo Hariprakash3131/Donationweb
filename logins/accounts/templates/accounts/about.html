@@ -1,0 +1,280 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Us - Education Foundation</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #3bcf93;
+            --secondary-color: #2980b9;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+        }
+
+        .hero-section {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 100px 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('{% static "accounts/pattern.png" %}') repeat;
+            opacity: 0.1;
+        }
+
+        .stat-card {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            margin: 15px 0;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-10px);
+        }
+
+        .stat-icon {
+            font-size: 40px;
+            margin-bottom: 20px;
+            color: var(--primary-color);
+        }
+
+        .team-member {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .team-member img {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            margin-bottom: 15px;
+            border: 5px solid var(--primary-color);
+            transition: transform 0.3s ease;
+        }
+
+        .team-member:hover img {
+            transform: scale(1.1);
+        }
+
+        .mission-section {
+            background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('{% static "accounts/helphand.jpg" %}');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            color: white;
+            padding: 100px 0;
+            position: relative;
+        }
+
+        .mission-content {
+            background: rgba(59, 207, 147, 0.1);
+            backdrop-filter: blur(10px);
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .mission-list {
+            margin-top: 2rem;
+        }
+
+        .mission-list li {
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+        }
+
+        .mission-list i {
+            font-size: 1.5rem;
+            margin-right: 1rem;
+            color: var(--primary-color);
+            background: rgba(255, 255, 255, 0.9);
+            padding: 8px;
+            border-radius: 50%;
+        }
+
+        @media (max-width: 768px) {
+            .mission-section {
+                padding: 60px 0;
+            }
+            
+            .mission-content {
+                padding: 30px;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .mission-section {
+                padding: 40px 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: var(--primary-color);">
+        <div class="container">
+            <a class="navbar-brand" href="{% url 'index' %}">Education Foundation</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link" href="{% url 'index' %}">Home</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="{% url 'about' %}">About</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'scholarship_form' %}">Apply</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'donation_form' %}">Donate</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero-section">
+        <div class="container text-center">
+            <h1 class="display-4 mb-4">Empowering Dreams Through Education</h1>
+            <p class="lead mb-4">We believe every student deserves a chance to excel in their education journey.</p>
+            <a href="{% url 'donation_form' %}" class="btn btn-light btn-lg px-4">Support Our Cause</a>
+        </div>
+    </section>
+
+    <!-- Stats Section -->
+    <section class="py-5">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="stat-card text-center">
+                        <i class="fas fa-graduation-cap stat-icon"></i>
+                        <h3>1000+</h3>
+                        <p>Students Supported</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="stat-card text-center">
+                        <i class="fas fa-hand-holding-heart stat-icon"></i>
+                        <h3>₹50M+</h3>
+                        <p>Donations Received</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="stat-card text-center">
+                        <i class="fas fa-school stat-icon"></i>
+                        <h3>100+</h3>
+                        <p>Partner Institutions</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Mission Section -->
+    <section class="mission-section">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-md-10">
+                    <div class="mission-content">
+                        <h2 class="mb-4">Our Mission</h2>
+                        <p class="lead">To provide quality education to underprivileged students and empower them to build a better future.</p>
+                        <ul class="list-unstyled mission-list">
+                            <li><i class="fas fa-check-circle"></i>Financial support through scholarships</li>
+                            <li><i class="fas fa-check-circle"></i>Mentorship programs</li>
+                            <li><i class="fas fa-check-circle"></i>Educational resources and guidance</li>
+                            <li><i class="fas fa-check-circle"></i>Career counseling</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Selection Process Section -->
+    <section class="py-5">
+        <div class="container">
+            <h2 class="text-center mb-5">Our Student Selection Process</h2>
+            <div class="row g-4">
+                <div class="col-lg-3 col-md-6">
+                    <div class="stat-card text-center h-100">
+                        <div class="step-number mb-3">
+                            <span class="badge rounded-circle bg-primary fs-4 p-3">1</span>
+                        </div>
+                        <i class="fas fa-file-alt stat-icon"></i>
+                        <h4>Application Review</h4>
+                        <p>Thorough evaluation of academic records, financial status, and personal statement</p>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6">
+                    <div class="stat-card text-center h-100">
+                        <div class="step-number mb-3">
+                            <span class="badge rounded-circle bg-primary fs-4 p-3">2</span>
+                        </div>
+                        <i class="fas fa-users stat-icon"></i>
+                        <h4>Interview Process</h4>
+                        <p>Personal interviews to understand aspirations, goals, and commitment to education</p>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6">
+                    <div class="stat-card text-center h-100">
+                        <div class="step-number mb-3">
+                            <span class="badge rounded-circle bg-primary fs-4 p-3">3</span>
+                        </div>
+                        <i class="fas fa-check-double stat-icon"></i>
+                        <h4>Background Verification</h4>
+                        <p>Verification of documents and background check to ensure authenticity</p>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6">
+                    <div class="stat-card text-center h-100">
+                        <div class="step-number mb-3">
+                            <span class="badge rounded-circle bg-primary fs-4 p-3">4</span>
+                        </div>
+                        <i class="fas fa-award stat-icon"></i>
+                        <h4>Final Selection</h4>
+                        <p>Merit-based selection considering academic excellence and financial need</p>
+                    </div>
+                </div>
+            </div>
+            <div class="text-center mt-5">
+                <p class="lead mb-4">Our selection process ensures that scholarships reach the most deserving candidates</p>
+                <a href="{% url 'scholarship_form' %}" class="btn btn-primary btn-lg">Apply Now</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Call to Action -->
+    <section class="py-5 bg-primary text-white text-center">
+        <div class="container">
+            <h2 class="mb-4">Join Us in Making a Difference</h2>
+            <p class="lead mb-4">Your support can help transform lives through education</p>
+            <a href="{% url 'donation_form' %}" class="btn btn-light btn-lg me-3">Donate Now</a>
+            <a href="{% url 'scholarship_form' %}" class="btn btn-outline-light btn-lg">Apply for Scholarship</a>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-dark text-white py-4">
+        <div class="container text-center">
+            <p class="mb-0">&copy; 2025 changeofheart Foundation. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

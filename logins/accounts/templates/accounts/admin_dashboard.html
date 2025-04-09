@@ -1,0 +1,354 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .card {
+            box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.15);
+            margin-bottom: 1rem;
+        }
+        .card-header {
+            padding: 1rem;
+        }
+        .table > :not(caption) > * > * {
+            padding: 0.75rem;
+        }
+        .badge {
+            padding: 0.5em 0.8em;
+        }
+        .btn-group .btn {
+            margin: 0 2px;
+        }
+        .navbar {
+            margin-bottom: 2rem;
+            background-color: #3bcf93;
+        }
+        .navbar-brand {
+            color: white !important;
+            font-weight: bold;
+        }
+        .nav-link {
+            color: white !important;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg">
+        <div class="container">
+            <a class="navbar-brand" href="{% url 'index' %}">Scholarship Portal</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'index' %}">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'my_activities' %}">Activities</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'logout' %}">Logout</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container-fluid py-4">
+        <!-- Stats Cards -->
+        <div class="row mb-4">
+            <div class="col-md-3">
+                <div class="card bg-primary text-white">
+                    <div class="card-body">
+                        <h5 class="card-title">Total Donations</h5>
+                        <h2 class="card-text">₹{{ total_donations }}</h2>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card bg-warning text-white">
+                    <div class="card-body">
+                        <h5 class="card-title">Pending Applications</h5>
+                        <h2 class="card-text">{{ pending_applications }}</h2>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card bg-success text-white">
+                    <div class="card-body">
+                        <h5 class="card-title">Approved Applications</h5>
+                        <h2 class="card-text">{{ approved_applications }}</h2>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card bg-danger text-white">
+                    <div class="card-body">
+                        <h5 class="card-title">Rejected Applications</h5>
+                        <h2 class="card-text">{{ rejected_applications }}</h2>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Donations Table -->
+        <div class="card mb-4">
+            <div class="card-header bg-primary text-white">
+                <h4 class="mb-0">Recent Donations</h4>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Donor Name</th>
+                                <th>Email</th>
+                                <th>Amount</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for donation in donations %}
+                            <tr>
+                                <td>{{ donation.date|date:"d M Y" }}</td>
+                                <td>{{ donation.first_name }} {{ donation.last_name }}</td>
+                                <td>{{ donation.email }}</td>
+                                <td>₹{{ donation.amount }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Scholarship Applications Table -->
+        <div class="card">
+            <div class="card-header bg-success text-white">
+                <h4 class="mb-0">Scholarship Applications</h4>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Student Name</th>
+                                <th>Mobile</th>
+                                <th>College</th>
+                                <th>Degree</th>
+                                <th>Semester Fee</th>
+                                <th>Status</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for application in scholarship_applications %}
+                            <tr>
+                                <td>{{ application.date_submitted|date:"d M Y" }}</td>
+                                <td>{{ application.full_name }}</td>
+                                <td>{{ application.mobile_number }}</td>
+                                <td>{{ application.college_name }}</td>
+                                <td>{{ application.degree }}</td>
+                                <td>₹{{ application.semester_fee }}</td>
+                                <td>
+                                    <span class="badge {% if application.application_status == 'approved' %}bg-success
+                                        {% elif application.application_status == 'rejected' %}bg-danger
+                                        {% else %}bg-warning{% endif %}">
+                                        {{ application.get_application_status_display }}
+                                    </span>
+                                </td>
+                                <td>
+                                    <div class="btn-group">
+                                        <button type="button" class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#viewModal{{ application.id }}">
+                                            View
+                                        </button>
+                                        <button type="button" class="btn btn-sm btn-success" onclick="updateStatus({{ application.id }}, 'approved')">
+                                            Approve
+                                        </button>
+                                        <button type="button" class="btn btn-sm btn-danger" onclick="updateStatus({{ application.id }}, 'rejected')">
+                                            Reject
+                                        </button>
+                                        <button type="button" class="btn btn-sm btn-dark delete-application" data-id="{{ application.id }}">
+                                            <i class="fas fa-trash"></i> Delete
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Application Details Modal -->
+    {% for application in scholarship_applications %}
+    <div class="modal fade" id="viewModal{{ application.id }}" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Application Details</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h6>Personal Information</h6>
+                            <p><strong>Name:</strong> {{ application.full_name }}</p>
+                            <p><strong>Email:</strong> {{ application.email }}</p>
+                            <p><strong>Mobile:</strong> {{ application.mobile_number }}</p>
+                            <p><strong>Date of Birth:</strong> {{ application.date_of_birth }}</p>
+                            <p><strong>Student ID:</strong> {{ application.student_id }}</p>
+                        </div>
+                        <div class="col-md-6">
+                            <h6>Family Information</h6>
+                            <p><strong>Father's Name:</strong> {{ application.father_name }}</p>
+                            <p><strong>Mother's Name:</strong> {{ application.mother_name }}</p>
+                            <p><strong>Siblings:</strong> {{ application.siblings|default:"Not specified" }}</p>
+                        </div>
+                    </div>
+                    <div class="row mt-3">
+                        <div class="col-md-6">
+                            <h6>Contact Information</h6>
+                            <p><strong>Address:</strong> {{ application.address }}</p>
+                            <p><strong>District:</strong> {{ application.district }}</p>
+                            <p><strong>State:</strong> {{ application.state }}</p>
+                            <p><strong>Country:</strong> {{ application.country }}</p>
+                        </div>
+                        <div class="col-md-6">
+                            <h6>Academic Information</h6>
+                            <p><strong>College:</strong> {{ application.college_name }}</p>
+                            <p><strong>Degree:</strong> {{ application.degree }}</p>
+                            <p><strong>Department Head Contact:</strong> {{ application.department_head_contact }}</p>
+                            <p><strong>Semester Fee:</strong> ₹{{ application.semester_fee }}</p>
+                        </div>
+                    </div>
+                    <div class="row mt-3">
+                        <div class="col-12">
+                            <h6>Documents</h6>
+                            <div class="list-group">
+                                {% if application.aadhar_card %}
+                                <a href="{{ application.aadhar_card.url }}" class="list-group-item list-group-item-action" target="_blank">
+                                    <i class="fas fa-file"></i> Aadhar Card
+                                </a>
+                                {% endif %}
+                                {% if application.pan_card %}
+                                <a href="{{ application.pan_card.url }}" class="list-group-item list-group-item-action" target="_blank">
+                                    <i class="fas fa-file"></i> PAN Card
+                                </a>
+                                {% endif %}
+                                {% if application.bank_passbook %}
+                                <a href="{{ application.bank_passbook.url }}" class="list-group-item list-group-item-action" target="_blank">
+                                    <i class="fas fa-file"></i> Bank Passbook
+                                </a>
+                                {% endif %}
+                                {% if application.college_bonafide %}
+                                <a href="{{ application.college_bonafide.url }}" class="list-group-item list-group-item-action" target="_blank">
+                                    <i class="fas fa-file"></i> College Bonafide
+                                </a>
+                                {% endif %}
+                                {% if application.extracurricular_certificate %}
+                                <a href="{{ application.extracurricular_certificate.url }}" class="list-group-item list-group-item-action" target="_blank">
+                                    <i class="fas fa-file"></i> Extracurricular Certificate
+                                </a>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+
+    <!-- Bootstrap JS and CSRF Token -->
+    {% csrf_token %}
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        function updateStatus(applicationId, status) {
+            const button = event.target;
+            const originalText = button.innerText;
+            button.disabled = true;
+            button.innerText = 'Processing...';
+
+            fetch('{% url "update_application_status" %}', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+                },
+                body: JSON.stringify({
+                    application_id: applicationId,
+                    status: status
+                })
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (data.success) {
+                    location.reload();
+                } else {
+                    alert('Error: ' + (data.error || 'Failed to update application status'));
+                    button.disabled = false;
+                    button.innerText = originalText;
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Error updating application status. Please try again.');
+                button.disabled = false;
+                button.innerText = originalText;
+            });
+        }
+    </script>
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Delete application functionality
+        document.querySelectorAll('.delete-application').forEach(button => {
+            button.addEventListener('click', function() {
+                if (confirm('Are you sure you want to delete this application? This action cannot be undone.')) {
+                    const applicationId = this.dataset.id;
+                    fetch(`/admin-dashboard/delete-application/${applicationId}/`, {
+                        method: 'POST',
+                        headers: {
+                            'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value,
+                        },
+                        credentials: 'same-origin'
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            // Remove the row from the table
+                            this.closest('tr').remove();
+                            alert('Application deleted successfully');
+                        } else {
+                            alert('Error: ' + (data.error || 'Failed to delete application'));
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        alert('Error deleting application. Please try again.');
+                    });
+                }
+            });
+        });
+    });
+    </script>
+</body>
+</html>
+{% csrf_token %}

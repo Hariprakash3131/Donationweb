@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment Successful</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        .success-container {
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            max-width: 500px;
+            margin: 50px auto;
+            text-align: center;
+        }
+        .success-container h2 {
+            color: #28a745;
+            margin-bottom: 15px;
+        }
+        .success-container p {
+            font-size: 16px;
+            color: #333;
+            margin-bottom: 10px;
+        }
+        .transaction-details {
+            margin: 20px 0;
+            padding: 15px;
+            border-radius: 5px;
+            background-color: #f8f9fa;
+            text-align: left;
+        }
+        .transaction-details p {
+            margin: 5px 0;
+        }
+        .button {
+            display: inline-block;
+            background-color: #28a745;
+            color: white;
+            padding: 12px 20px;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: bold;
+            transition: 0.3s;
+            margin: 5px;
+        }
+        .button:hover {
+            background-color: #218838;
+        }
+    </style>
+</head>
+<body>
+    <div class="success-container">
+        <h2>Payment Successful! 🎉</h2>
+        <p>Thank you for your donation, <strong>{{ donation.first_name }}</strong>!</p>
+        <p>Your generosity helps us support education.</p>
+
+        <div class="transaction-details">
+            <p><strong>Amount Paid:</strong> ₹{{ amount }}</p>
+            <p><strong>Transaction ID:</strong> #{{ transaction_id }}</p>
+            <p><strong>Email:</strong> {{ donation.email }}</p>
+        </div>
+
+        <!-- Buttons Section -->
+        <a href="/" class="button">Return to Home</a>
+        <a href="{% url 'my_activities' %}" class="button">My Activities</a>
+    </div>
+    <script>
+        function processPayment() {
+            var amount = document.getElementById("amount").value;
+    
+            if (!amount || amount <= 0) {
+                alert("Please enter a valid amount.");
+                return;
+            }
+    
+            // Simulate a payment process and redirect with the amount as a GET parameter
+            alert("Payment of ₹" + amount + " successful! Redirecting to success page...");
+            window.location.href = "{% url 'payment_success' donation.id %}?amount=" + amount;
+        }
+    </script>
+    
+</body>
+</html>
